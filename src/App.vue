@@ -1,32 +1,96 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div>
+    <vxe-virtual-tree
+      resizable
+      show-overflow
+      show-header-overflow
+      row-key
+      ref="xVTree"
+      height="500"
+      :tree-config="{ children: 'children' }"
+      :columns="tableColumn"
+      :data="tableData"
+      :border="true"
+    >
+    </vxe-virtual-tree>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+<script>
+import { data } from "./data";
+import { projectDataColumn } from "./projectData";
+export default {
+  data() {
+    return {
+      tableColumn: [
+        {
+          title: "部门",
+          field: "department_name",
+          width: 250,
+          fixed: "left",
+          slots: {
+            default: ({ row }) => {
+              return [
+                <div
+                  onClick={() => {
+                    const xVTree = this.$refs.xVTree;
+                    row.children = [...row.children];
+                    xVTree.setTreeExpand([row], true);
+                  }}
+                >
+                  {row.department_name}
+                </div>,
+              ];
+            },
+          },
+        },
+        {
+          title: "项目名称",
+          field: "project_name",
+          width: 250,
+        },
+        {
+          title: "费用说明",
+          field: "desc",
+          width: 250,
+        },
+        {
+          title: "预算编码",
+          field: "budget_code",
+          width: 250,
+        },
+        {
+          title: "项目负责人",
+          field: "project_admin_id",
+          width: 250,
+        },
+        {
+          title: "控制周期",
+          field: "control_cycle",
+          width: 250,
+        },
+        {
+          title: "资产类别",
+          field: "asset_type_code",
+          width: 250,
+        },
+        {
+          title: "资产名称",
+          field: "asset_name",
+          width: 250,
+        },
+        {
+          title: "预计终验时间",
+          field: "asset_accepted_at",
+          width: 250,
+        },
+        ...projectDataColumn
+      ],
+      tableData: data,
+    };
+  },
+  mounted() {
+    console.log(this.tableColumn);
+  },
+};
+</script>
